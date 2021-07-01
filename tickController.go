@@ -1,6 +1,7 @@
 package TickController
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -33,13 +34,13 @@ func (controller *TickController) Create() {
 func (controller *TickController) Tick(finish *bool, interval int64) {
 	var lastTick time.Time
 	var delta time.Duration
-	// sleepDuration, _ := time.ParseDuration(fmt.Sprintf("%vns", interval/2))
+	sleepDuration, _ := time.ParseDuration(fmt.Sprintf("%vns", interval/4))
 
 	for *finish {
 		delta = time.Now().Sub(lastTick)
 
 		if delta.Nanoseconds() < interval {
-
+			time.Sleep(sleepDuration)
 			continue
 		}
 
@@ -58,6 +59,10 @@ func (controller *TickController) CleanUp() {
 
 func (controller *TickController) AddTicker(job Ticker) {
 	controller.tickJobs = append(controller.tickJobs, job)
+}
+
+func PerSecondInterval(perSecond int) int64 {
+	return int64(1000000000 / perSecond)
 }
 
 /*
